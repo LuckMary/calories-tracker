@@ -30,7 +30,7 @@ export const initDatabase = (): Promise<void> => {
   });
 };
 
-export const executeSql = (operation: string, data?: any): Promise<any> => {
+export const executeDbOperation = (operation: string, data?: any): Promise<any> => {
   return new Promise((resolve, reject) => {
     if (!db) {
       return reject(new Error('Database not initialized. Call initDatabase() first.'));
@@ -39,7 +39,7 @@ export const executeSql = (operation: string, data?: any): Promise<any> => {
     const store = transaction.objectStore(STORE_NAME);
     
     switch(operation) {
-      case 'INSERT':
+      case 'CREATE':
         const addRequest = store.add({
           ...data,
           created_at: new Date().toISOString()
@@ -47,7 +47,7 @@ export const executeSql = (operation: string, data?: any): Promise<any> => {
         addRequest.onsuccess = () => resolve(addRequest.result);
         addRequest.onerror = () => reject(addRequest.error);
         break;
-      case 'SELECT':
+      case 'READ':
         const getAllRequest = store.getAll();
         getAllRequest.onsuccess = () => resolve(getAllRequest.result);
         getAllRequest.onerror = () => reject(getAllRequest.error);

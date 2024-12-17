@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { executeSql, FoodEntry, initDatabase } from '../db/database';
+import { executeDbOperation, FoodEntry, initDatabase } from '../db/database';
 
 interface FoodState {
   foods: FoodEntry[];
@@ -36,25 +36,25 @@ export const useFoodStore = create<FoodState>((set, get) => ({
   
   addFood: async (name: string, calories: number) => {
     await get()._ensureInitialized();
-    await executeSql('INSERT', { name, calories });
+    await executeDbOperation('CREATE', { name, calories });
     await get().fetchFoods();
   },
 
   removeFood: async (id: number) => {
     await get()._ensureInitialized();
-    await executeSql('DELETE', { id });
+    await executeDbOperation('DELETE', { id });
     await get().fetchFoods();
   },
 
   updateFood: async (id: number, name: string, calories: number) => {
     await get()._ensureInitialized();
-    await executeSql('UPDATE', { id, name, calories });
+    await executeDbOperation('UPDATE', { id, name, calories });
     await get().fetchFoods();
   },
 
   fetchFoods: async () => {
     await get()._ensureInitialized();
-    const foods = await executeSql('SELECT');
+    const foods = await executeDbOperation('READ');
     const totalCalories = foods.reduce((sum: number, item: FoodEntry) => sum + item.calories, 0);
     set({ foods, totalCalories });
   }
