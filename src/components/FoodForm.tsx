@@ -3,10 +3,10 @@ import { useFoodStore } from '../store/store';
 import { useState } from 'react';
 
 export const FoodForm = () => {
-  const [name, setName] = useState('');
-  const [calories, setCalories] = useState('');
-  const [nameError, setNameError] = useState('');
-  const [caloriesError, setCaloriesError] = useState('');
+  const [name, setName] = useState<string>('');
+  const [calories, setCalories] = useState<string>('');
+  const [nameError, setNameError] = useState<string>('');
+  const [caloriesError, setCaloriesError] = useState<string>('');
 
   const { addFood } = useFoodStore();
 
@@ -19,7 +19,7 @@ export const FoodForm = () => {
 
     // Validate inputs
     let isValid = true;
-    let caloriesNum = 0;
+    let caloriesNum: number = 0;
 
     if (!name.trim()) {
       setNameError('Name is required');

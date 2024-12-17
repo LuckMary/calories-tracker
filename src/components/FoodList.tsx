@@ -46,7 +46,11 @@ const columns: GridColDef<FoodEntry>[] = [
 ];
 
 export const FoodList = () => {
-  const { foods, fetchFoods, removeFood } = useFoodStore();
+  const { foods, fetchFoods, removeFood }: {
+    foods: FoodEntry[];
+    fetchFoods: () => Promise<void>;
+    removeFood: (id: number) => Promise<void>;
+  } = useFoodStore();
 
   useEffect(() => {
     fetchFoods();
