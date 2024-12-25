@@ -1,14 +1,30 @@
 import { Button, TextField } from '@mui/material';
 import { useFoodStore } from '../store/store';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { FoodEntry } from '../db/database';
 
-export const FoodForm = () => {
+interface FoodFormProps {
+  editItem?: FoodEntry;
+  onClose?: () => void;
+}
+
+export const FoodForm = ({ editItem, onClose }: FoodFormProps) => {
   const [name, setName] = useState<string>('');
   const [calories, setCalories] = useState<string>('');
   const [nameError, setNameError] = useState<string>('');
   const [caloriesError, setCaloriesError] = useState<string>('');
 
-  const { addFood } = useFoodStore();
+  const { addFood, updateFood } = useFoodStore();
+
+  useEffect(() => {
+    if (editItem) {
+      setName(editItem.name);
+      setCalories(editItem.calories.toString());
+    } else {
+      setName('');
+      setCalories('');
+    }
+  }, [editItem]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -44,9 +60,14 @@ export const FoodForm = () => {
     }
 
     if (isValid) {
-      await addFood(name, caloriesNum);
-      setName('');
-      setCalories('');
+      if (editItem) {
+        await updateFood(editItem.id, name, caloriesNum);
+        onClose?.();
+      } else {
+        await addFood(name, caloriesNum);
+        setName('');
+        setCalories('');
+      }
     }
   };
 
@@ -78,8 +99,18 @@ export const FoodForm = () => {
         fullWidth
         sx={{ mt: 2 }}
       >
-        Add Food
+        {editItem ? 'Update Food' : 'Add Food'}
       </Button>
+      {editItem && (
+        <Button
+          variant="outlined"
+          fullWidth
+          sx={{ mt: 2 }}
+          onClick={onClose}
+        >
+          Cancel
+        </Button>
+      )}
     </form>
   );
 };
