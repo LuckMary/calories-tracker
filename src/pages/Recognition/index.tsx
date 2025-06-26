@@ -1,10 +1,18 @@
-import { useState } from 'preact/hooks';
-import './style.css';
+import { useState } from "preact/hooks";
+import {
+  Box,
+  Button,
+  Container,
+  Typography,
+  TextField,
+  Alert,
+  Stack,
+} from "@mui/material";
 
- function Recognition() {
+function Recognition() {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [uploadStatus, setUploadStatus] = useState<string>('');
-  const [recognizedText, setRecognizedText] = useState<string>('');
+  const [uploadStatus, setUploadStatus] = useState<string>("");
+  const [recognizedText, setRecognizedText] = useState<string>("");
 
   const handleFileChange = (e: Event) => {
     const target = e.target as HTMLInputElement;
@@ -17,51 +25,73 @@ import './style.css';
     if (!selectedFile) return;
 
     const formData = new FormData();
-    formData.append('file', selectedFile);
+    formData.append("file", selectedFile);
 
     try {
-      setUploadStatus('Uploading...');
-      setRecognizedText('');
-      const response = await fetch('http://localhost:3000/api/upload', {
-        method: 'POST',
+      setUploadStatus("Uploading...");
+      setRecognizedText("");
+      const response = await fetch("http://localhost:3000/api/upload", {
+        method: "POST",
         body: formData,
       });
 
       if (response.ok) {
         const data = await response.json();
-        setUploadStatus('File processed successfully!');
-        setRecognizedText(data.text || 'No text recognized');
+        setUploadStatus("File processed successfully!");
+        setRecognizedText(data.text || "No text recognized");
       } else {
-        setUploadStatus('Upload failed');
+        setUploadStatus("Upload failed");
       }
     } catch (error) {
-      setUploadStatus('Error during upload');
-      console.error('Upload error:', error);
+      setUploadStatus("Error during upload");
+      console.error("Upload error:", error);
     }
   };
 
   return (
-    <div class="recognition-page">
-      <h1>File Recognition</h1>
-      <div class="upload-container">
-        <input 
-          type="file" 
+    <Container maxWidth="md" sx={{ py: 4 }}>
+      <Typography variant="h4" component="h1" gutterBottom>
+        File Recognition
+      </Typography>
+
+      <Stack spacing={3} sx={{ mb: 4 }}>
+        <TextField
+          type="file"
           onChange={handleFileChange}
-          accept="image/*"
+          inputProps={{ accept: "image/*" }}
+          fullWidth
         />
-        <button onClick={handleUpload} disabled={!selectedFile}>
+        <Button
+          variant="contained"
+          onClick={handleUpload}
+          disabled={!selectedFile}
+          sx={{ alignSelf: "flex-start" }}
+        >
           Upload
-        </button>
-      </div>
-      {uploadStatus && <p>{uploadStatus}</p>}
-      {recognizedText && (
-        <div class="text-result">
-          <h3>Recognized Text:</h3>
-          <pre>{recognizedText}</pre>
-        </div>
+        </Button>
+      </Stack>
+
+      {uploadStatus && (
+        <Alert
+          severity={uploadStatus.includes("success") ? "success" : "error"}
+          sx={{ mb: 2 }}
+        >
+          {uploadStatus}
+        </Alert>
       )}
-    </div>
+
+      {recognizedText && (
+        <Box sx={{ p: 2, border: "1px solid #ddd", borderRadius: 1 }}>
+          <Typography variant="h6" component="h3" gutterBottom>
+            Recognized Text:
+          </Typography>
+          <Typography component="pre" sx={{ whiteSpace: "pre-wrap" }}>
+            {recognizedText}
+          </Typography>
+        </Box>
+      )}
+    </Container>
   );
 }
 
-export default Recognition
+export default Recognition;
