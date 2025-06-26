@@ -1,19 +1,15 @@
-## FOOD TRACKER / СЧЕТЧИК КАЛОРИЙ
+# `create-preact`
 
-**Русский**  
-Food Tracker - это удобное приложение для учета потребляемых продуктов и контроля питания. Позволяет добавлять продукты, отслеживать их количество и анализировать пищевую ценность.  
+<h2 align="center">
+  <img height="256" width="256" src="./src/assets/preact.svg">
+</h2>
 
-### Цели проекта:
-- 📊 Учет потребляемых продуктов
-- 📈 Анализ пищевой ценности
-- 🍎 Контроль за питанием
-- 🚀 Удобный интерфейс для ежедневного использования
+<h3 align="center">Get started using Preact and Vite!</h3>
 
-**English**  
-Food Tracker is a convenient application for tracking consumed foods and nutrition control. It allows adding food items, tracking their quantities and analyzing nutritional value.
+## Getting Started
 
-### Project Goals:
-- 📊 Track consumed food items
-- 📈 Analyze nutritional value
-- 🍎 Nutrition control
-- 🚀 User-friendly interface for daily use
+-   `npm run dev` - Starts a dev server at http://localhost:5173/
+
+-   `npm run build` - Builds for production, emitting to `dist/`. Prerenders all found routes in app to static HTML
+
+-   `npm run preview` - Starts a server at http://localhost:4173/ to test production build locally

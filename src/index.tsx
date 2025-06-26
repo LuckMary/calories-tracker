@@ -1,12 +1,11 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import App from './App';
+import { hydrate, prerender as ssr } from 'preact-iso';
 
-const root = ReactDOM.createRoot(
-  document.getElementById('root') as HTMLElement
-);
-root.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
-);
+import App from './App'
+
+if (typeof window !== 'undefined') {
+	hydrate(<App />, document.getElementById('app'));
+}
+
+export async function prerender(data) {
+	return await ssr(<App {...data} />);
+}
