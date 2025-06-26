@@ -1,32 +1,20 @@
-import { FoodForm } from './components/FoodForm';
-import { FoodList } from './components/FoodList';
-import { Container, Typography } from '@mui/material';
-import { useFoodStore } from './store/store';
-import { useEffect } from 'react';
+import { LocationProvider, Router, Route } from "preact-iso";
+
+import Home from "./pages/Home";
+import Recognition from "./pages/Recognition";
+import NotFound from "./pages/_404";
+import Tracker from "./pages/Tracker";
 
 function App() {
-  const { initDatabase, fetchFoods } = useFoodStore();
-
-  useEffect(() => {
-    const initializeApp = async () => {
-      try {
-        await initDatabase();
-        await fetchFoods();
-      } catch (error) {
-        console.error('Initialization error:', error);
-      }
-    };
-    initializeApp();
-  }, [initDatabase, fetchFoods]);
-
   return (
-    <Container maxWidth="md" sx={{ py: 4 }}>
-      <Typography variant="h4" component="h1" gutterBottom>
-        Calorie Tracker
-      </Typography>
-      <FoodForm />
-      <FoodList />
-    </Container>
+    <LocationProvider>
+      <Router>
+        <Route path="/" component={Home} />
+        <Route path="/tracker" component={Tracker} />
+        <Route path="/recognition" component={Recognition} />
+        <Route default component={NotFound} />
+      </Router>
+    </LocationProvider>
   );
 }
 

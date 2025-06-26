@@ -1,10 +1,10 @@
-import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
-import { useFoodStore } from '../store/store';
-import { useEffect, useState } from 'react';
-import dayjs from 'dayjs';
-import { FoodEntry } from '../db/database';
-import { FoodForm } from './FoodForm';
-import { Dialog, DialogTitle, DialogContent } from '@mui/material';
+import { DataGrid, GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
+import { useFoodStore } from "../../../store/store";
+import { useEffect, useState } from "react";
+import dayjs from "dayjs";
+import { FoodEntry } from "../../../db/database";
+import { FoodForm } from "./FoodForm";
+import { Dialog, DialogTitle, DialogContent } from "@mui/material";
 
 export const FoodList = () => {
   const { foods, fetchFoods, removeFood } = useFoodStore();
@@ -16,67 +16,62 @@ export const FoodList = () => {
 
   const columns: GridColDef<FoodEntry>[] = [
     {
-      field: 'name',
-      headerName: 'Food Name',
-      width: 200
+      field: "name",
+      headerName: "Food Name",
+      width: 200,
     },
     {
-      field: 'calories',
-      headerName: 'Calories',
+      field: "calories",
+      headerName: "Calories",
       width: 120,
-      type: 'number'
+      type: "number",
     },
     {
-      field: 'created_at',
-      headerName: 'Date Added',
+      field: "created_at",
+      headerName: "Date Added",
       width: 200,
       valueFormatter: (value: string) =>
-        dayjs(value).format('YYYY-MM-DD HH:mm')
+        dayjs(value).format("YYYY-MM-DD HH:mm"),
     },
     {
-      field: 'actions',
-      headerName: 'Actions',
+      field: "actions",
+      headerName: "Actions",
       width: 150,
       renderCell: (params: GridRenderCellParams<FoodEntry>) => {
         const handleDelete = async () => {
           try {
             await removeFood(params.row.id);
           } catch (error) {
-            console.error('Failed to delete food:', error);
+            console.error("Failed to delete food:", error);
           }
         };
 
         const handleEdit = () => {
           setEditItem(params.row);
-        }
+        };
 
         return (
           <div>
-            <button
-              onClick={handleEdit}
-              style={{ marginRight: '8px' }}
-            >
+            <button onClick={handleEdit} style={{ marginRight: "8px" }}>
               Edit
             </button>
-            <button onClick={handleDelete}>
-              Delete
-            </button>
+            <button onClick={handleDelete}>Delete</button>
           </div>
         );
-      }
-    }
+      },
+    },
   ];
 
   return (
     <>
-      <div style={{ height: 400, width: '100%' }}>
+      <div style={{ height: 400, width: "100%" }}>
         <DataGrid
           rows={foods}
           columns={columns}
           initialState={{
             pagination: {
-              paginationModel: { pageSize: 5 }
-            }
+              paginationModel: { pageSize: 5 },
+            },
           }}
           pageSizeOptions={[5]}
           getRowId={(row: FoodEntry) => row.id}
@@ -91,10 +86,7 @@ export const FoodList = () => {
         >
           <DialogTitle>Edit Food Entry</DialogTitle>
           <DialogContent>
-            <FoodForm
-              editItem={editItem}
-              onClose={() => setEditItem(null)}
-            />
+            <FoodForm editItem={editItem} onClose={() => setEditItem(null)} />
           </DialogContent>
         </Dialog>
       )}
